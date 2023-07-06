@@ -1,38 +1,158 @@
 .App {
   text-align: center;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  margin: 0; 
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  font-family: "TT Hoves Pro";
+  transition: 0.5s;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+@font-face {
+  font-family: "TT Hoves Pro";
+  src: url(../TT\ Hoves\ Pro\ Trial\ Regular.ttf);
+  font-weight: 200
+}
+@font-face {
+  font-family: "TT Hoves Pro";
+  src: url(../TT\ Hoves\ Pro\ Trial\ Medium.ttf);
+  font-weight: 400
+}
+@font-face {
+  font-family: "TT Hoves Pro";
+  src: url(../TT\ Hoves\ Pro\ Trial\ DemiBold.ttf);
+  font-weight: 600
+}
+@font-face {
+  font-family: "TT Hoves Pro";
+  src: url(../TT\ Hoves\ Pro\ Trial\ Bold.ttf);
+  font-weight: 800
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+h1 {
+  font-size: 24px;
+  font-weight: 800;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+button {
+  font-family: "TT Hoves Pro";
+  font-weight: 600;
+  font-size: 20px;
+  padding: 16px 32px;
+  border-radius: 8px;
+  border: none;
+  background-color: #99F140;
+  color: #343E3C;
+  transition: 0.2s;
+}
+button.active {
+  background-color: #343E3C;
+  font-weight: 400;
+  color: white
+}
+
+button:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+button:active {
+  opacity: 0.4;
+}
+
+.progress-bar {
+  height: 60px;
+  background-color: lightgray;
+  border-radius: 8px;
+  margin: 50px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+}
+
+.result-list {
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+}
+
+.info-list {
+  margin: 50px auto;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  width: 75%;
+}
+.info-container {
+  box-shadow: 0 8px 8px #eeefef;
+  padding: 16px 12px;
+  border-radius: 4px;
+  border: 1px solid #e0e2e2;
+  width: 30%;
+}
+.info-item {
+  border-left: 6px solid;
+  width: 100;
+  padding: 4px 16px;
+  text-align: left;
+}
+
+.case {
+  display: flex;
+  height: 100%;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  animation: progress-slide 0.8s ease-out;
 }
 
-.App-link {
-  color: #61dafb;
+.line {
+  width: 4px;
+  background-color: red;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
 }
 
-@keyframes App-logo-spin {
+.current {
+  transition: 0.8s;
+}
+
+.arrow {
+  position: absolute;
+  transform: rotate(90deg) translate(-44px, 50%);
+  height: 120px;
+}
+
+@keyframes progress-slide {
   from {
-    transform: rotate(0deg);
+    width: 0px;
   }
-  to {
-    transform: rotate(360deg);
-  }
+}
+
+.example-enter {
+  opacity: 0;
+  transform:translateX(-100%);
+}
+.example-enter-active {
+  opacity: 1;
+  transform:translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.example-exit {
+  opacity: 1;
+  transform:translateX(0);
+}
+.example-exit-active {
+  opacity: 0;
+  transform:translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
 }
