@@ -74,7 +74,7 @@ const App = () => {
   const [nextPosition, setNextPosition] = useState(true)
   const [lastClass, setLastClass] = useState("Nichts")
 
-  const progressMax = 3
+  const progressMax = 4
 
   useEffect(() => {
     let list = []
