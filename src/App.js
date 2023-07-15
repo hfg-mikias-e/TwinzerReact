@@ -74,7 +74,7 @@ const App = () => {
   const [nextPosition, setNextPosition] = useState(true)
   const [lastClass, setLastClass] = useState("Nichts")
 
-  const progressMax = 4
+  const progressMax = 3
 
   useEffect(() => {
     let list = []
@@ -183,11 +183,15 @@ const App = () => {
         <p>Fälle: {data.filter(e => e.name === item.name).length}</p>
         <br/>
         {item.indexes.map(index =>
-          <span>Rebe {index}. </span>
+          <span>Rebe {index+1}. </span>
         )}
       </div>
     </div>
   );
+
+  const restartPage = () => {
+    window.location.reload(true);
+  }
 
   return (
     <div className="App">
@@ -199,6 +203,7 @@ const App = () => {
         <div className="info-list">
           { progressList }
         </div>
+        <button onClick={restartPage}>Neuer Scan</button>
       </div>
     </div>
   );
