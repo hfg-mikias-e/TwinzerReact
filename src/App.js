@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Webcam from "react-webcam";
-//import useWebSocket from 'react-use-websocket';
 import './App.css';
 
-//const ws1 = new WebSocket("ws://localhost:1880/ws/faden");
-const ws2 = new WebSocket("ws://localhost:1880/ws/image");
-//const ws = new WebSocket("ws://104.45.89.24:1880/ws/prediction");
+const ws2 = new WebSocket(process.env.REACT_BACKEND_ENDPOINT);
 
 const colors = [
   {color: "#F5814F", names: ["Peronospora", "Falscher Mehltau"]},
@@ -15,22 +12,21 @@ const colors = [
   {color: "#61A0FF", names: ["Grauschimmel", "Botrytis"]},
   {color: "#B182FF", names: ["ESCA", "Rotpilz"]},
   {color: "none", names: ["Nichts", "Gesund"]}
-  //{color: "none", names: ["Nichts"]}
 ]
 
+// camera component
 const WebcamCapture = (props) => {
   const webcamRef = React.useRef(null);
-  //const [image, setImage] = useState(null)
 
   const toggleStream = React.useCallback(() => {
     props.setStream(!props.stream)
   }, [props]);
 
   const capture = React.useCallback(async() => {
+    // take image and send over websocket
     const base64 = await fetch(webcamRef.current.getScreenshot())
     const img = await base64.blob()
 
-    //setImage(img)
     ws2.send(img)
   }, [webcamRef]);
 
@@ -43,7 +39,6 @@ const WebcamCapture = (props) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if(props.stream) {
-        //console.log("interval")
         capture()
       }
     }, 500);
@@ -96,16 +91,6 @@ const App = () => {
     setList(list)
   }, [data, setList]);
 
-  //console.log(list)
-
-  /*
-  useEffect(() => {
-    ws1.onopen = () => {
-      console.log("ws1 connected")
-    };
-  }, []);
-  */
-
   const addData = useCallback((result/*, pos*/) => {
     const currentClass = result.class
     console.log(currentClass)
@@ -124,57 +109,20 @@ const App = () => {
     if(data >= progressMax) {
       setStream(false)
     }
-
-    /*
-    let pos = 0
-    if(result.class !== "Nichts") {
-      pos = 1
-    }
-
-    if(pos === nextPosition) {
-      if(result.class !== "Nichts") {
-        setData((current) => [...current, {name: result.class, probability: result.score, color: colors.find(item => item.names.includes(result.class)).color}])
-      }
-
-      if(nextPosition === 1) {
-        setNextPosition(0)
-      } else if(nextPosition === 0) {
-        setNextPosition(1)
-      }
-    }
-  */
   }, [lastClass, data, nextPosition]);
 
   useEffect(() => {
+    // receive findings from backend
     ws2.onmessage = function (event) {
       const json = JSON.parse(event.data);
-      // {detector: [{class: 'Milben', score: 0.6652169227600098}, ...], position: {class: '0', score: 0.9999990463256836}}
 
       if(stream) {
         addData(json[0])
       }
-      
-      /*
-      if(json.detector.length > 0 && json.position !== undefined) {
-        addData(json.detector[0], Number(json.position.class))
-      }
-      */
-    };
+    }
   }, [addData, stream]);
 
-  /*
-  useEffect(() => {
-    ws1.onmessage = function (event) {
-      const json = JSON.parse(event.data);
-
-      if(json[0].class === "Marker" && json[0].score >= 0.7 && !nextPosition) {
-        console.log("nextPosition", nextPosition)
-        setNextPosition(true)
-      }
-    };
-  }, [nextPosition, setNextPosition, stream]);
-  */
-
+  // results card
   const progressList = list.map(item =>
     <div className="info-container">
       <div key={list.indexOf(item)} className="info-item" style={{ borderLeftColor: item.color }}>
@@ -212,7 +160,6 @@ const App = () => {
 const ProgressBar = (props) => {
   const progressMax = props.progressMax
   const data = props.data;
-  // {name: result.class, probability: result.score, color: ""}
 
   useEffect(() => {
     // wenn neue Daten reinkommen, überprüfe ob Prozess abgeschlossen
